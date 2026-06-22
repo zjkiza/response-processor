@@ -1,6 +1,6 @@
 {
     "name": "zjkiza/response-processor",
-    "description": "Symfony bundle for post-response data injection via attributes",
+    "description": "Symfony bundle for automatically enrich DTO response objects with relational data using PHP 8 attributes",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
