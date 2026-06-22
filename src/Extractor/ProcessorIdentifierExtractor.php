@@ -7,7 +7,7 @@ namespace ZJKiza\ResponseProcessor\Extractor;
 use ZJKiza\ResponseProcessor\Attribute\ProcessorIdentifier;
 use ZJKiza\ResponseProcessor\Contract\IdentifierExtractorInterface;
 
-class ProcessorIdentifierExtractor implements IdentifierExtractorInterface
+final class ProcessorIdentifierExtractor implements IdentifierExtractorInterface
 {
     private const ATTRIBUTE_FOR_IDENTIFIER = ProcessorIdentifier::class;
 
@@ -18,13 +18,13 @@ class ProcessorIdentifierExtractor implements IdentifierExtractorInterface
     {
         $property = $this->resolveProperty($object);
 
-        if (null === $property) {
+        if (!$property instanceof \ReflectionProperty) {
             return null;
         }
 
         $value = $property->getValue($object);
 
-        return null !== $value ? (string) $value : null;
+        return \is_scalar($value) ? (string) $value : null;
     }
 
     private function resolveProperty(object $object): ?\ReflectionProperty

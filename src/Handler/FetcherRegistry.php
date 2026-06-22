@@ -11,6 +11,9 @@ final class FetcherRegistry
     /** @var array<class-string, DataFetcherInterface> */
     private array $fetchers = [];
 
+    /**
+     * @param iterable<DataFetcherInterface> $fetchers
+     */
     public function __construct(iterable $fetchers)
     {
         foreach ($fetchers as $fetcher) {

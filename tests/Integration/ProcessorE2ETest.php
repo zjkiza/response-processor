@@ -10,16 +10,20 @@ use ZJKiza\ResponseProcessor\Tests\Resources\KernelTestCase;
 
 final class ProcessorE2ETest extends KernelTestCase
 {
-    private array $savedHandlers = [];
+    /** @var array{error: callable|null, exception: callable|null} */
+    private array $savedHandlers = ['error' => null, 'exception' => null];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->savedHandlers['error'] = \set_error_handler(static fn () => null);
+        $errorHandler = \set_error_handler(static fn (int $severity, string $message, string $file, int $line): bool => false);
+        $this->savedHandlers['error'] = $errorHandler;
         \restore_error_handler();
 
-        $this->savedHandlers['exception'] = \set_exception_handler(static fn () => null);
+        $exceptionHandler = \set_exception_handler(static function (\Throwable $e): void {
+        });
+        $this->savedHandlers['exception'] = $exceptionHandler;
         \restore_exception_handler();
     }
 
@@ -27,14 +31,15 @@ final class ProcessorE2ETest extends KernelTestCase
     {
         parent::tearDown();
 
-        while (\set_error_handler(static fn () => null) !== $this->savedHandlers['error']) {
+        while (\set_error_handler(static fn (int $severity, string $message, string $file, int $line): bool => false) !== $this->savedHandlers['error']) {
             \restore_error_handler();
             \restore_error_handler();
         }
 
         \restore_error_handler();
 
-        while (\set_exception_handler(static fn () => null) !== $this->savedHandlers['exception']) {
+        while (\set_exception_handler(static function (\Throwable $e): void {
+        }) !== $this->savedHandlers['exception']) {
             \restore_exception_handler();
             \restore_exception_handler();
         }
@@ -48,7 +53,7 @@ final class ProcessorE2ETest extends KernelTestCase
 
         $container = self::getContainer();
 
-        $this->assertTrue($container->has('ZJKiza\ResponseProcessor\Listener\ProcessorListener'));
+        $this->assertTrue($container->has(\ZJKiza\ResponseProcessor\Listener\ProcessorListener::class));
         $this->assertTrue($container->has('test.tag_handler'));
         $this->assertTrue($container->has('test.presenter_handler'));
         $this->assertTrue($container->has('test.json_response_listener'));
@@ -62,15 +67,16 @@ final class ProcessorE2ETest extends KernelTestCase
         $request->attributes->set('_controller', TestController::class.'::singleAction');
 
         $response = $kernel->handle($request);
-        $kernel->terminate($request, $response);
         self::ensureKernelShutdown();
 
         $this->assertSame(200, $response->getStatusCode());
 
-        $data = \json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        /** @var list<array{id: string, tag: array{id: string, name: string}|null, presenters: list<array{id: string, name: string}>|null}> $data */
+        $data = \json_decode(\strval($response->getContent()), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $data);
         $this->assertSame('a', $data[0]['id']);
+        $this->assertNotNull($data[0]['tag']);
         $this->assertSame('tag_a', $data[0]['tag']['id']);
         $this->assertNull($data[0]['presenters']);
     }
@@ -83,12 +89,12 @@ final class ProcessorE2ETest extends KernelTestCase
         $request->attributes->set('_controller', TestController::class.'::testAction');
 
         $response = $kernel->handle($request);
-        $kernel->terminate($request, $response);
         self::ensureKernelShutdown();
 
         $this->assertSame(200, $response->getStatusCode());
 
-        $data = \json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        /** @var list<array{id: string, tag: array{id: string, name: string}, presenters: list<array{id: string, name: string}>}> $data */
+        $data = \json_decode(\strval($response->getContent()), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(3, $data);
 
@@ -116,12 +122,12 @@ final class ProcessorE2ETest extends KernelTestCase
         $request->attributes->set('_controller', TestController::class.'::noAttributeAction');
 
         $response = $kernel->handle($request);
-        $kernel->terminate($request, $response);
         self::ensureKernelShutdown();
 
         $this->assertSame(200, $response->getStatusCode());
 
-        $data = \json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        /** @var list<array{id: string, tag: mixed, presenters: mixed}> $data */
+        $data = \json_decode(\strval($response->getContent()), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $data);
         $this->assertSame('a', $data[0]['id']);

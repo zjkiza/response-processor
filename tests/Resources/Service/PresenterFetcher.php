@@ -9,6 +9,7 @@ use ZJKiza\ResponseProcessor\Tests\Resources\Controller\Dto\PresenterDto;
 
 final class PresenterFetcher implements DataFetcherInterface
 {
+    /** @var array<string, list<array{id: string, name: string}>> */
     private array $data = [
         'a' => [
             ['id' => 'presenter_a', 'name' => 'Presenter for A'],
@@ -31,6 +32,7 @@ final class PresenterFetcher implements DataFetcherInterface
         foreach ($identifiers as $id) {
             if (isset($this->data[$id])) {
                 foreach ($this->data[$id] as $presenter) {
+                    /** @var array{id: string, name: string} $presenter */
                     $result[$id][] = new PresenterDto($presenter['id'], $presenter['name']);
                 }
             }

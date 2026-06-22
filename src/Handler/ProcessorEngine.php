@@ -21,9 +21,9 @@ final class ProcessorEngine
     public function process(mixed $data, PropertyResolverInterface $resolver): void
     {
         $items = \is_array($data) ? $data : [$data];
-        $objects = \array_filter($items, 'is_object');
+        $objects = \array_filter($items, is_object(...));
 
-        if (empty($objects)) {
+        if ([] === $objects) {
             return;
         }
 
@@ -35,7 +35,7 @@ final class ProcessorEngine
             }
         }
 
-        if (empty($identifierMap)) {
+        if ([] === $identifierMap) {
             return;
         }
 
@@ -50,7 +50,7 @@ final class ProcessorEngine
             foreach ($properties as $property) {
                 $fetcher = $resolver->resolve($property);
 
-                if (null === $fetcher) {
+                if (!$fetcher instanceof \ZJKiza\ResponseProcessor\Contract\DataFetcherInterface) {
                     continue;
                 }
 
@@ -85,7 +85,7 @@ final class ProcessorEngine
         $properties = [];
 
         foreach ($reflection->getProperties() as $property) {
-            if (null !== $resolver->resolve($property)) {
+            if ($resolver->resolve($property) instanceof \ZJKiza\ResponseProcessor\Contract\DataFetcherInterface) {
                 $properties[] = $property;
             }
         }

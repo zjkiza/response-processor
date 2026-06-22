@@ -12,6 +12,9 @@ use ZJKiza\ResponseProcessor\Tests\Resources\Service\TagFetcher;
 
 class MediaDto
 {
+    /**
+     * @param list<PresenterDto>|null $presenters
+     */
     public function __construct(
         #[ProcessorIdentifier]
         public string $id,

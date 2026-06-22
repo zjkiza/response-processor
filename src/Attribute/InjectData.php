@@ -7,7 +7,7 @@ namespace ZJKiza\ResponseProcessor\Attribute;
 use ZJKiza\ResponseProcessor\Contract\ProcessorAttributeInterface;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-class InjectData implements ProcessorAttributeInterface
+final class InjectData implements ProcessorAttributeInterface
 {
     public function __construct(
         public string $repository,

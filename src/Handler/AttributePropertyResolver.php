@@ -19,10 +19,13 @@ final readonly class AttributePropertyResolver implements PropertyResolverInterf
     {
         $attributes = $property->getAttributes($this->attributeClass);
 
-        if (empty($attributes)) {
+        if ([] === $attributes) {
             return null;
         }
 
-        return $this->fetcherRegistry->get($attributes[0]->newInstance()->repository);
+        $attribute = $attributes[0]->newInstance();
+
+        /** @var object{repository: string} $attribute */
+        return $this->fetcherRegistry->get($attribute->repository);
     }
 }

@@ -22,9 +22,23 @@
         <DeprecatedMethod errorLevel="info"/>
         <DeprecatedFunction errorLevel="info"/>
         <MissingOverrideAttribute errorLevel="suppress"/>
+        <DeprecatedInterface errorLevel="info"/>
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Symfony\Component\HttpKernel\Event\ViewEvent"/>
+            </errorLevel>
+        </UndefinedClass>
+        <ArgumentTypeCoercion>
+            <errorLevel type="suppress">
+                <referencedFunction name="ReflectionProperty::getAttributes"/>
+                <referencedFunction name="ReflectionMethod::__construct"/>
+                <referencedFunction name="ZJKiza\ResponseProcessor\Handler\AttributePropertyResolver::__construct"/>
+            </errorLevel>
+        </ArgumentTypeCoercion>
     </issueHandlers>
 
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
     </plugins>
 </psalm>

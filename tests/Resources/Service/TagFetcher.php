@@ -9,6 +9,7 @@ use ZJKiza\ResponseProcessor\Tests\Resources\Controller\Dto\TagDto;
 
 final class TagFetcher implements DataFetcherInterface
 {
+    /** @var array<string, array{id: string, name: string}> */
     private array $data = [
         'a' => ['id' => 'tag_a', 'name' => 'Tag for A'],
         'b' => ['id' => 'tag_b', 'name' => 'Tag for B'],
@@ -20,7 +21,9 @@ final class TagFetcher implements DataFetcherInterface
         $result = [];
         foreach ($identifiers as $id) {
             if (isset($this->data[$id])) {
-                $result[$id] = new TagDto($this->data[$id]['id'], $this->data[$id]['name']);
+                /** @var array{id: string, name: string} $item */
+                $item = $this->data[$id];
+                $result[$id] = new TagDto($item['id'], $item['name']);
             }
         }
 

@@ -19,6 +19,7 @@ final class ZJKizaResponseProcessorExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
+        /** @var array{listener: array{priority: int}} $config */
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(

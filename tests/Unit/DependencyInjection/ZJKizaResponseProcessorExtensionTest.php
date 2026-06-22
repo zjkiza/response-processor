@@ -50,7 +50,7 @@ final class ZJKizaResponseProcessorExtensionTest extends TestCase
         $extension->load([], $container);
 
         $this->assertTrue($container->hasDefinition(
-            'ZJKiza\ResponseProcessor\Listener\ProcessorListener',
+            \ZJKiza\ResponseProcessor\Listener\ProcessorListener::class,
         ));
     }
 }

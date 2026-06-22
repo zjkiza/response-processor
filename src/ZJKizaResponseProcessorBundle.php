@@ -10,7 +10,7 @@ use ZJKiza\ResponseProcessor\DependencyInjection\ZJKizaResponseProcessorExtensio
 
 final class ZJKizaResponseProcessorBundle extends AbstractBundle
 {
-    public function getContainerExtension(): ?ExtensionInterface
+    public function getContainerExtension(): ExtensionInterface
     {
         return new ZJKizaResponseProcessorExtension();
     }

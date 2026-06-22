@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZJKiza\ResponseProcessor\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use ZJKiza\ResponseProcessor\Contract\DataFetcherInterface;
 use ZJKiza\ResponseProcessor\Contract\PropertyResolverInterface;
 use ZJKiza\ResponseProcessor\Extractor\ProcessorIdentifierExtractor;
 use ZJKiza\ResponseProcessor\Handler\AttributePropertyResolver;
@@ -59,7 +60,7 @@ final class ProcessorEngineTest extends TestCase
         $dto = new \stdClass();
         $this->engine->process([$dto], $resolver);
 
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testProcessHandlesEmptyArray(): void
@@ -68,7 +69,7 @@ final class ProcessorEngineTest extends TestCase
 
         $this->engine->process([], $resolver);
 
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testProcessWithMultipleObjectsBatchesFetch(): void
@@ -99,7 +100,7 @@ final class ProcessorEngineTest extends TestCase
         $this->assertNotNull($dto->tag);
     }
 
-    private function createResolver(string $attributeClass, $fetcher): PropertyResolverInterface
+    private function createResolver(string $attributeClass, DataFetcherInterface $fetcher): PropertyResolverInterface
     {
         $registry = new FetcherRegistry([$fetcher]);
 

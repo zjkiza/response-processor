@@ -9,6 +9,9 @@ use ZJKiza\ResponseProcessor\Tests\Resources\Controller\Dto\MediaDto;
 
 class TestController
 {
+    /**
+     * @return list<MediaDto>
+     */
     #[Processor('tag_handler')]
     #[Processor('presenter_handler')]
     public function testAction(): array
@@ -20,6 +23,9 @@ class TestController
         ];
     }
 
+    /**
+     * @return list<MediaDto>
+     */
     #[Processor('tag_handler')]
     public function singleAction(): array
     {
@@ -28,6 +34,9 @@ class TestController
         ];
     }
 
+    /**
+     * @return list<MediaDto>
+     */
     public function noAttributeAction(): array
     {
         return [

@@ -12,16 +12,19 @@ final class ProcessorListener
 {
     private const SEPARATOR = '::';
 
+    /** @var array<string, string[]> */
     private array $controllerCache = [];
 
-    /** @var ProcessorHandlerInterface[] */
+    /** @var array<string, ProcessorHandlerInterface> */
     private array $handlers = [];
 
+    /**
+     * @param iterable<string, ProcessorHandlerInterface> $handlers
+     */
     public function __construct(
         iterable $handlers,
     ) {
         foreach ($handlers as $key => $handler) {
-            /** @var ProcessorHandlerInterface $handler */
             $this->handlers[$key] = $handler;
         }
     }
@@ -37,9 +40,6 @@ final class ProcessorListener
         }
 
         $handlerClasses = $this->getHandlerClasses($controllerKey);
-        if (empty($handlerClasses)) {
-            return;
-        }
 
         foreach ($handlerClasses as $handlerKey) {
             if (!isset($this->handlers[$handlerKey])) {
@@ -58,7 +58,16 @@ final class ProcessorListener
 
         if (\is_array($controller) && 2 === \count($controller)) {
             [$object, $method] = $controller;
-            $class = \is_object($object) ? $object::class : $object;
+
+            if (!\is_string($method)) {
+                return null;
+            }
+
+            $class = \is_object($object) ? $object::class : (\is_string($object) ? $object : null);
+
+            if (null === $class) {
+                return null;
+            }
 
             return $class.self::SEPARATOR.$method;
         }
@@ -75,7 +84,13 @@ final class ProcessorListener
             return $this->controllerCache[$key];
         }
 
-        [$class, $method] = \explode(self::SEPARATOR, $key, 2);
+        $parts = \explode(self::SEPARATOR, $key, 2);
+
+        if (2 !== \count($parts)) {
+            return $this->controllerCache[$key] = [];
+        }
+
+        [$class, $method] = $parts;
 
         try {
             $reflection = new \ReflectionMethod($class, $method);

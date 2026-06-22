@@ -1,21 +1,17 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+
 parameters:
     level: max
     paths:
         - src
         - tests
     excludePaths:
-        - tests/Fixtures
+        - tests/Resources/var
     tmpDir: var/phpstan
 
     symfony:
-        containerXmlPath: var/cache/test/ZJKizaResponseProcessor_TestDebug_Container.xml
-        containerXmlPath: tests/Resources/var/cache/test/ZJKizaResponseProcessor_Tests_Resources_App_ZJKizaHttpResponseValidatorBundleTestKernelTestDebugContainer.xml
-
-    doctrine:
-        objectManagerLoader: null
-
-includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-phpunit/rules.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
-    - vendor/phpstan/phpstan-symfony/rules.neon
+        containerXmlPath: null
