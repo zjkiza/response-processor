@@ -15,7 +15,8 @@ final class ProcessorEngine
 
     public function __construct(
         private readonly IdentifierExtractorInterface $identifierExtractor,
-    ) {}
+    ) {
+    }
 
     public function process(mixed $data, PropertyResolverInterface $resolver): void
     {
@@ -29,7 +30,7 @@ final class ProcessorEngine
         $identifierMap = [];
         foreach ($objects as $object) {
             $id = $this->identifierExtractor->extract($object);
-            if ($id !== null) {
+            if (null !== $id) {
                 $identifierMap[$id] = $object;
             }
         }
@@ -49,7 +50,7 @@ final class ProcessorEngine
             foreach ($properties as $property) {
                 $fetcher = $resolver->resolve($property);
 
-                if ($fetcher === null) {
+                if (null === $fetcher) {
                     continue;
                 }
 
@@ -74,7 +75,7 @@ final class ProcessorEngine
     private function resolveProperties(PropertyResolverInterface $resolver, int $callId, object $object): array
     {
         $class = $object::class;
-        $cacheKey = $callId . '::' . $class;
+        $cacheKey = $callId.'::'.$class;
 
         if (isset($this->propertyCache[$cacheKey])) {
             return $this->propertyCache[$cacheKey];
@@ -84,7 +85,7 @@ final class ProcessorEngine
         $properties = [];
 
         foreach ($reflection->getProperties() as $property) {
-            if ($resolver->resolve($property) !== null) {
+            if (null !== $resolver->resolve($property)) {
                 $properties[] = $property;
             }
         }

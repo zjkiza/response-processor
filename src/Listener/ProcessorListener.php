@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ZJKiza\ResponseProcessor\Listener;
 
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ZJKiza\ResponseProcessor\Attribute\Processor;
 use ZJKiza\ResponseProcessor\Contract\ProcessorHandlerInterface;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
 
 final class ProcessorListener
 {
@@ -32,7 +32,7 @@ final class ProcessorListener
         $controller = $request->attributes->get('_controller');
 
         $controllerKey = $this->normalizeController($controller);
-        if ($controllerKey === null) {
+        if (null === $controllerKey) {
             return;
         }
 
@@ -56,10 +56,11 @@ final class ProcessorListener
             return $controller;
         }
 
-        if (\is_array($controller) && \count($controller) === 2) {
+        if (\is_array($controller) && 2 === \count($controller)) {
             [$object, $method] = $controller;
             $class = \is_object($object) ? $object::class : $object;
-            return $class . self::SEPARATOR . $method;
+
+            return $class.self::SEPARATOR.$method;
         }
 
         return null;

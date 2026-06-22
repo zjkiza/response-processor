@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ZJKiza\ResponseProcessor\Tests\Unit\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Processor;
 use ZJKiza\ResponseProcessor\DependencyInjection\Configuration;
 
 final class ConfigurationTest extends TestCase

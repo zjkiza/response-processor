@@ -19,11 +19,12 @@ final class IdentifierExtractorTest extends TestCase
 
     public function testExtractReturnsIdentifier(): void
     {
-        $object = new class('test-id') {
+        $object = new class ('test-id') {
             public function __construct(
                 #[ProcessorIdentifier]
                 public string $id,
-            ) {}
+            ) {
+            }
         };
 
         $result = $this->extractor->extract($object);
@@ -33,10 +34,11 @@ final class IdentifierExtractorTest extends TestCase
 
     public function testExtractReturnsNullWhenNoAttribute(): void
     {
-        $object = new class('test-id') {
+        $object = new class ('test-id') {
             public function __construct(
                 public string $id,
-            ) {}
+            ) {
+            }
         };
 
         $result = $this->extractor->extract($object);
@@ -46,11 +48,12 @@ final class IdentifierExtractorTest extends TestCase
 
     public function testExtractReturnsNullWhenNullValue(): void
     {
-        $object = new class(null) {
+        $object = new class (null) {
             public function __construct(
                 #[ProcessorIdentifier]
                 public ?string $id,
-            ) {}
+            ) {
+            }
         };
 
         $result = $this->extractor->extract($object);
@@ -60,20 +63,22 @@ final class IdentifierExtractorTest extends TestCase
 
     public function testExtractCachesPropertyPerClass(): void
     {
-        $objectA = new class('id-a') {
+        $objectA = new class ('id-a') {
             public function __construct(
                 #[ProcessorIdentifier]
                 public string $id,
                 public string $name = 'a',
-            ) {}
+            ) {
+            }
         };
 
-        $objectB = new class('b', 'id-b') {
+        $objectB = new class ('b', 'id-b') {
             public function __construct(
                 public string $name,
                 #[ProcessorIdentifier]
                 public string $id,
-            ) {}
+            ) {
+            }
         };
 
         $resultA = $this->extractor->extract($objectA);
@@ -85,11 +90,12 @@ final class IdentifierExtractorTest extends TestCase
 
     public function testExtractWithIntIdentifier(): void
     {
-        $object = new class(42) {
+        $object = new class (42) {
             public function __construct(
                 #[ProcessorIdentifier]
                 public int $id,
-            ) {}
+            ) {
+            }
         };
 
         $result = $this->extractor->extract($object);

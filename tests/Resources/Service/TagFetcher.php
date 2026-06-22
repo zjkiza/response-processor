@@ -23,6 +23,7 @@ final class TagFetcher implements DataFetcherInterface
                 $result[$id] = new TagDto($this->data[$id]['id'], $this->data[$id]['name']);
             }
         }
+
         return $result;
     }
 }

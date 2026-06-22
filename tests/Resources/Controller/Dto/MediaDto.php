@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ZJKiza\ResponseProcessor\Tests\Resources\Controller\Dto;
 
-
 use ZJKiza\ResponseProcessor\Attribute\ProcessorIdentifier;
 use ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectPresenter;
 use ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectTag;

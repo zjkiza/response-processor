@@ -27,11 +27,12 @@ final class AttributePropertyResolverTest extends TestCase
         $registry = new FetcherRegistry([$fetcher]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 
-        $object = new class {
+        $object = new class () {
             public function __construct(
                 #[InjectData(TestDummyFetcher::class)]
                 public mixed $data = null,
-            ) {}
+            ) {
+            }
         };
 
         $property = new \ReflectionProperty($object, 'data');
@@ -46,11 +47,12 @@ final class AttributePropertyResolverTest extends TestCase
         $registry = new FetcherRegistry([$fetcher]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 
-        $object = new class {
+        $object = new class () {
             public function __construct(
                 #[InjectPresenter(\stdClass::class)]
                 public mixed $data = null,
-            ) {}
+            ) {
+            }
         };
 
         $property = new \ReflectionProperty($object, 'data');
@@ -65,10 +67,11 @@ final class AttributePropertyResolverTest extends TestCase
         $registry = new FetcherRegistry([$fetcher]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 
-        $object = new class {
+        $object = new class () {
             public function __construct(
                 public mixed $data = null,
-            ) {}
+            ) {
+            }
         };
 
         $property = new \ReflectionProperty($object, 'data');
@@ -82,11 +85,12 @@ final class AttributePropertyResolverTest extends TestCase
         $registry = new FetcherRegistry([]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 
-        $object = new class {
+        $object = new class () {
             public function __construct(
                 #[InjectData('App\NonExistentFetcher')]
                 public mixed $data = null,
-            ) {}
+            ) {
+            }
         };
 
         $this->expectException(\RuntimeException::class);

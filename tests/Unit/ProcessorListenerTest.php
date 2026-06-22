@@ -22,7 +22,7 @@ final class ProcessorListenerTest extends TestCase
         $listener = new ProcessorListener(['tag_handler' => $handler]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::singleAction',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class.'::singleAction',
         );
 
         $listener->onKernelView($event);
@@ -37,7 +37,7 @@ final class ProcessorListenerTest extends TestCase
         $listener = new ProcessorListener(['tag_handler' => $handler]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::noAttributeAction',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class.'::noAttributeAction',
         );
 
         $listener->onKernelView($event);
@@ -48,7 +48,7 @@ final class ProcessorListenerTest extends TestCase
         $listener = new ProcessorListener([]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::testAction',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class.'::testAction',
         );
 
         $this->expectException(\RuntimeException::class);
@@ -103,7 +103,7 @@ final class ProcessorListenerTest extends TestCase
         $listener = new ProcessorListener(['tag_handler' => $handler]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::nonExistentMethod',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class.'::nonExistentMethod',
         );
 
         $listener->onKernelView($event);
@@ -118,7 +118,7 @@ final class ProcessorListenerTest extends TestCase
         $listener = new ProcessorListener(['tag_handler' => $handler]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::singleAction',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class.'::singleAction',
         );
 
         $listener->onKernelView($event);
@@ -141,7 +141,7 @@ final class ProcessorListenerTest extends TestCase
         ]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::testAction',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class.'::testAction',
         );
 
         $listener->onKernelView($event);

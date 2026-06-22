@@ -102,6 +102,7 @@ final class ProcessorEngineTest extends TestCase
     private function createResolver(string $attributeClass, $fetcher): PropertyResolverInterface
     {
         $registry = new FetcherRegistry([$fetcher]);
+
         return new AttributePropertyResolver($attributeClass, $registry);
     }
 }

@@ -10,7 +10,6 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@PSR12' => true,
-        'strict_types' => true,
         'declare_strict_types' => true,
         'native_function_invocation' => ['include' => ['@all']],
         'no_unused_imports' => true,

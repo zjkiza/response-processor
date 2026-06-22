@@ -17,6 +17,6 @@ final class ZJKizaResponseProcessorBundle extends AbstractBundle
 
     public function getPath(): string
     {
-        return \dirname(__DIR__) . '/src';
+        return \dirname(__DIR__).'/src';
     }
 }

@@ -10,9 +10,10 @@ use ZJKiza\ResponseProcessor\Contract\PropertyResolverInterface;
 final readonly class AttributePropertyResolver implements PropertyResolverInterface
 {
     public function __construct(
-        private string          $attributeClass,
+        private string $attributeClass,
         private FetcherRegistry $fetcherRegistry,
-    ) {}
+    ) {
+    }
 
     public function resolve(\ReflectionProperty $property): ?DataFetcherInterface
     {

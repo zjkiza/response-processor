@@ -35,6 +35,7 @@ final class PresenterFetcher implements DataFetcherInterface
                 }
             }
         }
+
         return $result;
     }
 }

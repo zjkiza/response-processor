@@ -18,13 +18,13 @@ class ProcessorIdentifierExtractor implements IdentifierExtractorInterface
     {
         $property = $this->resolveProperty($object);
 
-        if ($property === null) {
+        if (null === $property) {
             return null;
         }
 
         $value = $property->getValue($object);
 
-        return $value !== null ? (string) $value : null;
+        return null !== $value ? (string) $value : null;
     }
 
     private function resolveProperty(object $object): ?\ReflectionProperty

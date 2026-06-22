@@ -8,7 +8,8 @@ final readonly class ResolverFactory
 {
     public function __construct(
         private FetcherRegistry $fetcherRegistry,
-    ) {}
+    ) {
+    }
 
     public function forAttribute(string $attributeClass): AttributePropertyResolver
     {

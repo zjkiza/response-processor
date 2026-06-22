@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ZJKiza\ResponseProcessor\Tests\Unit\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use ZJKiza\ResponseProcessor\DependencyInjection\Configuration;
 use ZJKiza\ResponseProcessor\DependencyInjection\ZJKizaResponseProcessorExtension;
 
 final class ZJKizaResponseProcessorExtensionTest extends TestCase
