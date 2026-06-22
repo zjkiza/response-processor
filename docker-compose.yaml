@@ -1,0 +1,24 @@
+services:
+
+    php_bundle_response_processor:
+        restart: on-failure
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        env_file:
+            -   path: .env
+                required: false
+        container_name: php_bundle_response_processor
+        hostname: php_bundle_response_processor
+        volumes:
+          - ./:/www
+        working_dir: /www
+        expose:
+          - "9000"
+        networks:
+            - docker-core-bundle-response-processor
+
+networks:
+    docker-core-bundle-response-processor:

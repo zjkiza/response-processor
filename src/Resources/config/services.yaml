@@ -1,0 +1,22 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    ZJKiza\ResponseProcessor\Extractor\ProcessorIdentifierExtractor:
+
+    ZJKiza\ResponseProcessor\Contract\IdentifierExtractorInterface: '@ZJKiza\ResponseProcessor\Extractor\ProcessorIdentifierExtractor'
+
+    ZJKiza\ResponseProcessor\Handler\ProcessorEngine:
+
+    ZJKiza\ResponseProcessor\Handler\FetcherRegistry:
+        arguments:
+            $fetchers: !tagged_iterator { tag: 'zjkiza_response_processor.fetcher' }
+
+    ZJKiza\ResponseProcessor\Handler\ResolverFactory:
+
+    ZJKiza\ResponseProcessor\Listener\ProcessorListener:
+        arguments:
+            - !tagged_iterator { tag: 'zjkiza_response_processor.handler', index_by: 'key' }
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView, priority: '%zjkiza_response_processor.listener.priority%' }
