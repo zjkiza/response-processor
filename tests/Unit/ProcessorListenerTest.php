@@ -22,7 +22,7 @@ final class ProcessorListenerTest extends TestCase
         $listener = new ProcessorListener(['tag_handler' => $handler]);
 
         $event = $this->createViewEvent(
-            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::testAction',
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::singleAction',
         );
 
         $listener->onKernelView($event);
@@ -57,6 +57,74 @@ final class ProcessorListenerTest extends TestCase
         $listener->onKernelView($event);
     }
 
+    public function testOnKernelViewWithArrayControllerFormat(): void
+    {
+        $handler = $this->createMock(ProcessorHandlerInterface::class);
+        $handler->expects($this->once())
+            ->method('process');
+
+        $listener = new ProcessorListener(['tag_handler' => $handler]);
+
+        $request = new Request();
+        $request->attributes->set(
+            '_controller',
+            [\ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class, 'singleAction'],
+        );
+
+        $kernel = $this->createStub(HttpKernelInterface::class);
+        $event = new ViewEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, []);
+
+        $listener->onKernelView($event);
+    }
+
+    public function testOnKernelViewSkipsWhenControllerIsNotStringOrArray(): void
+    {
+        $handler = $this->createMock(ProcessorHandlerInterface::class);
+        $handler->expects($this->never())
+            ->method('process');
+
+        $listener = new ProcessorListener(['tag_handler' => $handler]);
+
+        $request = new Request();
+        $request->attributes->set('_controller', 123);
+
+        $kernel = $this->createStub(HttpKernelInterface::class);
+        $event = new ViewEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, []);
+
+        $listener->onKernelView($event);
+    }
+
+    public function testOnKernelViewSkipsWhenMethodDoesNotExist(): void
+    {
+        $handler = $this->createMock(ProcessorHandlerInterface::class);
+        $handler->expects($this->never())
+            ->method('process');
+
+        $listener = new ProcessorListener(['tag_handler' => $handler]);
+
+        $event = $this->createViewEvent(
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::nonExistentMethod',
+        );
+
+        $listener->onKernelView($event);
+    }
+
+    public function testOnKernelViewUsesCacheOnSecondCall(): void
+    {
+        $handler = $this->createMock(ProcessorHandlerInterface::class);
+        $handler->expects($this->exactly(2))
+            ->method('process');
+
+        $listener = new ProcessorListener(['tag_handler' => $handler]);
+
+        $event = $this->createViewEvent(
+            \ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController::class . '::singleAction',
+        );
+
+        $listener->onKernelView($event);
+        $listener->onKernelView($event);
+    }
+
     public function testOnKernelViewCallsMultipleHandlers(): void
     {
         $tagHandler = $this->createMock(ProcessorHandlerInterface::class);
@@ -84,7 +152,7 @@ final class ProcessorListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_controller', $controller);
 
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
 
         return new ViewEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, []);
     }

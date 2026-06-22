@@ -11,17 +11,25 @@ use ZJKiza\ResponseProcessor\Handler\AttributePropertyResolver;
 use ZJKiza\ResponseProcessor\Handler\FetcherRegistry;
 use ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectPresenter;
 
+final class TestDummyFetcher implements DataFetcherInterface
+{
+    public function fetch(array $identifiers): array
+    {
+        return [];
+    }
+}
+
 final class AttributePropertyResolverTest extends TestCase
 {
     public function testResolveReturnsFetcherWhenAttributeMatches(): void
     {
-        $fetcher = $this->createMock(DataFetcherInterface::class);
+        $fetcher = new TestDummyFetcher();
         $registry = new FetcherRegistry([$fetcher]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 
         $object = new class {
             public function __construct(
-                #[InjectData(\stdClass::class)]
+                #[InjectData(TestDummyFetcher::class)]
                 public mixed $data = null,
             ) {}
         };
@@ -34,7 +42,7 @@ final class AttributePropertyResolverTest extends TestCase
 
     public function testResolveReturnsNullWhenAttributeDoesNotMatch(): void
     {
-        $fetcher = $this->createMock(DataFetcherInterface::class);
+        $fetcher = $this->createStub(DataFetcherInterface::class);
         $registry = new FetcherRegistry([$fetcher]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 
@@ -53,7 +61,7 @@ final class AttributePropertyResolverTest extends TestCase
 
     public function testResolveReturnsNullWhenNoAttribute(): void
     {
-        $fetcher = $this->createMock(DataFetcherInterface::class);
+        $fetcher = $this->createStub(DataFetcherInterface::class);
         $registry = new FetcherRegistry([$fetcher]);
         $resolver = new AttributePropertyResolver(InjectData::class, $registry);
 

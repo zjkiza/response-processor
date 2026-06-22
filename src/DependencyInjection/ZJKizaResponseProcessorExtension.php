@@ -11,6 +11,11 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 final class ZJKizaResponseProcessorExtension extends Extension
 {
+    public function getAlias(): string
+    {
+        return 'zjkiza_response_processor';
+    }
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();

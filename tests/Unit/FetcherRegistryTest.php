@@ -12,7 +12,7 @@ final class FetcherRegistryTest extends TestCase
 {
     public function testGetReturnsRegisteredFetcher(): void
     {
-        $fetcher = $this->createMock(DataFetcherInterface::class);
+        $fetcher = $this->createStub(DataFetcherInterface::class);
         $registry = new FetcherRegistry([$fetcher]);
 
         $result = $registry->get($fetcher::class);
@@ -32,8 +32,19 @@ final class FetcherRegistryTest extends TestCase
 
     public function testGetWithMultipleFetchers(): void
     {
-        $fetcherA = $this->createMock(DataFetcherInterface::class);
-        $fetcherB = $this->createMock(DataFetcherInterface::class);
+        $fetcherA = new class implements DataFetcherInterface {
+            public function fetch(array $identifiers): array
+            {
+                return [];
+            }
+        };
+
+        $fetcherB = new class implements DataFetcherInterface {
+            public function fetch(array $identifiers): array
+            {
+                return [];
+            }
+        };
 
         $registry = new FetcherRegistry([$fetcherA, $fetcherB]);
 
@@ -43,8 +54,8 @@ final class FetcherRegistryTest extends TestCase
 
     public function testLaterFetcherOverwritesSameClass(): void
     {
-        $fetcherA = $this->createMock(DataFetcherInterface::class);
-        $fetcherB = $this->createMock(DataFetcherInterface::class);
+        $fetcherA = $this->createStub(DataFetcherInterface::class);
+        $fetcherB = $this->createStub(DataFetcherInterface::class);
 
         $registry = new FetcherRegistry([$fetcherA, $fetcherB]);
 

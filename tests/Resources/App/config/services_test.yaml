@@ -1,1 +1,33 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    ZJKiza\ResponseProcessor\Tests\Resources\Service\TagFetcher:
+        tags:
+            - { name: 'zjkiza_response_processor.fetcher' }
+
+    ZJKiza\ResponseProcessor\Tests\Resources\Service\PresenterFetcher:
+        tags:
+            - { name: 'zjkiza_response_processor.fetcher' }
+
+    ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController:
+
+    test.tag_handler:
+        class: ZJKiza\ResponseProcessor\Handler\AttributeHandler
+        arguments:
+            $attributeClass: ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectTag
+        tags:
+            - { name: 'zjkiza_response_processor.handler', key: 'tag_handler' }
+
+    test.presenter_handler:
+        class: ZJKiza\ResponseProcessor\Handler\AttributeHandler
+        arguments:
+            $attributeClass: ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectPresenter
+        tags:
+            - { name: 'zjkiza_response_processor.handler', key: 'presenter_handler' }
+
+    test.json_response_listener:
+        class: ZJKiza\ResponseProcessor\Tests\Resources\Listener\JsonResponseListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, priority: -10 }

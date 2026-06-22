@@ -3,7 +3,6 @@
 ## Project Structure
 
 ```
-packages/response-processor/
 ├── composer.json                          # zjkiza/response-processor
 ├── .gitignore
 ├── .php-cs-fixer.dist.php                 # PSR12 + strict_types
@@ -42,21 +41,6 @@ packages/response-processor/
 │   └── Resources/config/
 │       └── services.yaml                  # bundle service definitions
 └── tests/
-    ├── Fixtures/
-    │   ├── FakeController.php
-    │   ├── FakePresenterDto.php
-    │   ├── FakePresenterFetcher.php
-    │   ├── FakeTagDto.php
-    │   ├── FakeTagFetcher.php
-    │   ├── InjectPresenter.php            # example user attribute
-    │   ├── TestDto.php
-    │   └── TestKernel.php
-    └── Unit/
-        ├── FetcherRegistryTest.php
-        ├── IdentifierExtractorTest.php
-        ├── AttributePropertyResolverTest.php
-        ├── ProcessorEngineTest.php
-        └── ProcessorListenerTest.php
 ```
 
 ## Key Conventions
@@ -69,6 +53,7 @@ packages/response-processor/
 - **YAML only**: bundle uses YAML for service definitions (no PHP config)
 - **Marker interface**: `ProcessorAttributeInterface` flags custom attributes for this bundle
 - **AbstractBundle**: bundle extends Symfony `AbstractBundle` (works on Symfony 5.4+)
+- **CRITICAL — Extension loading**: `AbstractBundle::getContainerExtension()` in Symfony 8+ returns a `BundleExtension` that calls the bundle's own `loadExtension()` — NOT the separate `*Extension` class. To use a custom extension class (with `services.yaml`), the bundle MUST override `getContainerExtension()` to return a `new CustomExtension()`. Without this override, `services.yaml` is never loaded.
 
 ## Critical Edge Cases
 
@@ -87,3 +72,45 @@ vendor/bin/phpunit
 ```
 
 Tests use anonymous classes and fixtures. No database required.
+
+### PHPUnit "Risky" — Symfony ErrorHandler
+
+When using `KernelTestCase::bootKernel()`, `FrameworkBundle::boot()` calls `ErrorHandler::register()` which pushes entries onto the error/exception handler stacks via `set_error_handler()`/`set_exception_handler()`. Each kernel boot adds one entry per stack, and `tearDown()`'s `ensureKernelShutdown()` re-boots the kernel.
+
+PHPUnit 12 detects the extra handlers and marks the test as risky ("Test code or tested code did not remove its own error/exception handlers").
+
+**Fix** — save handlers in `setUp()`, restore in `tearDown()` by popping all entries above the saved one:
+
+```php
+private array $savedHandlers = [];
+
+protected function setUp(): void
+{
+    parent::setUp();
+
+    $this->savedHandlers['error'] = \set_error_handler(static fn () => null);
+    \restore_error_handler();
+
+    $this->savedHandlers['exception'] = \set_exception_handler(static fn () => null);
+    \restore_exception_handler();
+}
+
+protected function tearDown(): void
+{
+    parent::tearDown();
+
+    while (\set_error_handler(static fn () => null) !== $this->savedHandlers['error']) {
+        \restore_error_handler();
+        \restore_error_handler();
+    }
+
+    \restore_error_handler();
+
+    while (\set_exception_handler(static fn () => null) !== $this->savedHandlers['exception']) {
+        \restore_exception_handler();
+        \restore_exception_handler();
+    }
+
+    \restore_exception_handler();
+}
+```

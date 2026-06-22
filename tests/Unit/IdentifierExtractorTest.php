@@ -68,9 +68,9 @@ final class IdentifierExtractorTest extends TestCase
             ) {}
         };
 
-        $objectB = new class('id-b') {
+        $objectB = new class('b', 'id-b') {
             public function __construct(
-                public string $name = 'b',
+                public string $name,
                 #[ProcessorIdentifier]
                 public string $id,
             ) {}

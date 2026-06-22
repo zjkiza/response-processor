@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace ZJKiza\ResponseProcessor\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use ZJKiza\ResponseProcessor\Attribute\InjectData;
 use ZJKiza\ResponseProcessor\Contract\PropertyResolverInterface;
 use ZJKiza\ResponseProcessor\Extractor\ProcessorIdentifierExtractor;
 use ZJKiza\ResponseProcessor\Handler\AttributePropertyResolver;
 use ZJKiza\ResponseProcessor\Handler\FetcherRegistry;
 use ZJKiza\ResponseProcessor\Handler\ProcessorEngine;
 use ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectPresenter;
-use ZJKiza\ResponseProcessor\Tests\Resources\Controller\Dto\TestDto;
-use ZJKiza\ResponseProcessor\Tests\Resources\Service\TagFetcher;
+use ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectTag;
+use ZJKiza\ResponseProcessor\Tests\Resources\Controller\Dto\MediaDto;
 use ZJKiza\ResponseProcessor\Tests\Resources\Service\PresenterFetcher;
+use ZJKiza\ResponseProcessor\Tests\Resources\Service\TagFetcher;
 
 final class ProcessorEngineTest extends TestCase
 {
@@ -27,9 +27,9 @@ final class ProcessorEngineTest extends TestCase
 
     public function testProcessInjectsTagData(): void
     {
-        $resolver = $this->createResolver(InjectData::class, new TagFetcher());
+        $resolver = $this->createResolver(InjectTag::class, new TagFetcher());
 
-        $dto = new TestDto('a', 'name-a');
+        $dto = new MediaDto('a', 'name-a');
         $this->engine->process([$dto], $resolver);
 
         $this->assertNotNull($dto->tag);
@@ -44,7 +44,7 @@ final class ProcessorEngineTest extends TestCase
             new PresenterFetcher(),
         );
 
-        $dto = new TestDto('a', 'name-a');
+        $dto = new MediaDto('a', 'name-a');
         $this->engine->process([$dto], $resolver);
 
         $this->assertNotNull($dto->presenters);
@@ -54,7 +54,7 @@ final class ProcessorEngineTest extends TestCase
 
     public function testProcessSkipsObjectsWithoutIdentifier(): void
     {
-        $resolver = $this->createResolver(InjectData::class, new TagFetcher());
+        $resolver = $this->createResolver(InjectTag::class, new TagFetcher());
 
         $dto = new \stdClass();
         $this->engine->process([$dto], $resolver);
@@ -64,7 +64,7 @@ final class ProcessorEngineTest extends TestCase
 
     public function testProcessHandlesEmptyArray(): void
     {
-        $resolver = $this->createResolver(InjectData::class, new TagFetcher());
+        $resolver = $this->createResolver(InjectTag::class, new TagFetcher());
 
         $this->engine->process([], $resolver);
 
@@ -74,12 +74,12 @@ final class ProcessorEngineTest extends TestCase
     public function testProcessWithMultipleObjectsBatchesFetch(): void
     {
         $fetcher = new TagFetcher();
-        $resolver = $this->createResolver(InjectData::class, $fetcher);
+        $resolver = $this->createResolver(InjectTag::class, $fetcher);
 
-        $dtoA = new TestDto('a', 'name-a');
-        $dtoB = new TestDto('b', 'name-b');
-        $dtoC = new TestDto('c', 'name-c');
-        $dtoX = new TestDto('x', 'name-x');
+        $dtoA = new MediaDto('a', 'name-a');
+        $dtoB = new MediaDto('b', 'name-b');
+        $dtoC = new MediaDto('c', 'name-c');
+        $dtoX = new MediaDto('x', 'name-x');
 
         $this->engine->process([$dtoA, $dtoB, $dtoC, $dtoX], $resolver);
 
@@ -91,9 +91,9 @@ final class ProcessorEngineTest extends TestCase
 
     public function testProcessWithSingleObjectNormalizesToArray(): void
     {
-        $resolver = $this->createResolver(InjectData::class, new TagFetcher());
+        $resolver = $this->createResolver(InjectTag::class, new TagFetcher());
 
-        $dto = new TestDto('a', 'name-a');
+        $dto = new MediaDto('a', 'name-a');
         $this->engine->process($dto, $resolver);
 
         $this->assertNotNull($dto->tag);
