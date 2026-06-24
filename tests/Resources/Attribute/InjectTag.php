@@ -10,7 +10,7 @@ use ZJKiza\ResponseProcessor\Contract\ProcessorAttributeInterface;
 class InjectTag implements ProcessorAttributeInterface
 {
     public function __construct(
-        public string $repository,
+        public string $fetcher,
     ) {
     }
 }

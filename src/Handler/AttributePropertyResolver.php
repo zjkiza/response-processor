@@ -25,7 +25,7 @@ final readonly class AttributePropertyResolver implements PropertyResolverInterf
 
         $attribute = $attributes[0]->newInstance();
 
-        /** @var object{repository: string} $attribute */
-        return $this->fetcherRegistry->get($attribute->repository);
+        /** @var object{fetcher: string} $attribute */
+        return $this->fetcherRegistry->get($attribute->fetcher);
     }
 }

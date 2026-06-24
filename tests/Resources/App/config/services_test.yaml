@@ -4,12 +4,7 @@ services:
         autoconfigure: true
 
     ZJKiza\ResponseProcessor\Tests\Resources\Service\TagFetcher:
-        tags:
-            - { name: 'zjkiza_response_processor.fetcher' }
-
     ZJKiza\ResponseProcessor\Tests\Resources\Service\PresenterFetcher:
-        tags:
-            - { name: 'zjkiza_response_processor.fetcher' }
 
     ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController:
 

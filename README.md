@@ -155,7 +155,7 @@ use ZJKiza\ResponseProcessor\Contract\ProcessorAttributeInterface;
 class InjectPresenter implements ProcessorAttributeInterface
 {
     public function __construct(
-        public string $repository,  // DataFetcherInterface class name
+        public string $fetcher,  // DataFetcherInterface class name
     ) {}
 }
 ```
