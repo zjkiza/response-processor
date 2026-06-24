@@ -21,7 +21,11 @@ final class DataFetcherCompilerPass implements CompilerPassInterface
                 continue;
             }
 
-            if (!\is_subclass_of($class, DataFetcherInterface::class)) {
+            try {
+                if (!\is_subclass_of($class, DataFetcherInterface::class)) {
+                    continue;
+                }
+            } catch (\Throwable) {
                 continue;
             }
 

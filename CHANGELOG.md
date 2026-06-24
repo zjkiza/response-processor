@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1]
+
+### Bugfix
+- Skips classes that cannot be autoloaded
+
 ## [0.6.0]
 
 ### Fixed
