@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2]
+
+### Changed
+- Changed the registration method of services that implement "DataFetcherInterface::class".
+
 ## [0.6.1]
 
 ### Bugfix

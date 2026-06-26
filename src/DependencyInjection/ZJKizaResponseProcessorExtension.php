@@ -8,6 +8,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use ZJKiza\ResponseProcessor\Contract\DataFetcherInterface;
 
 final class ZJKizaResponseProcessorExtension extends Extension
 {
@@ -33,5 +34,9 @@ final class ZJKizaResponseProcessorExtension extends Extension
         );
 
         $loader->load('services.yaml');
+
+        $container
+            ->registerForAutoconfiguration(DataFetcherInterface::class)
+            ->addTag('zjkiza_response_processor.fetcher');
     }
 }
