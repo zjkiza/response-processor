@@ -13,7 +13,7 @@ use ZJKiza\ResponseProcessor\Tests\Resources\Attribute\InjectPresenter;
 
 final class TestDummyFetcher implements DataFetcherInterface
 {
-    public function fetch(array $identifiers): array
+    public function fetch(iterable $identifiers): array
     {
         return [];
     }

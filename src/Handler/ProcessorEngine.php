@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZJKiza\ResponseProcessor\Handler;
 
+use ZJKiza\ResponseProcessor\Contract\DataFetcherInterface;
 use ZJKiza\ResponseProcessor\Contract\IdentifierExtractorInterface;
 use ZJKiza\ResponseProcessor\Contract\PropertyResolverInterface;
 
@@ -50,7 +51,7 @@ final class ProcessorEngine
             foreach ($properties as $property) {
                 $fetcher = $resolver->resolve($property);
 
-                if (!$fetcher instanceof \ZJKiza\ResponseProcessor\Contract\DataFetcherInterface) {
+                if (!$fetcher instanceof DataFetcherInterface) {
                     continue;
                 }
 
@@ -85,7 +86,7 @@ final class ProcessorEngine
         $properties = [];
 
         foreach ($reflection->getProperties() as $property) {
-            if ($resolver->resolve($property) instanceof \ZJKiza\ResponseProcessor\Contract\DataFetcherInterface) {
+            if ($resolver->resolve($property) instanceof DataFetcherInterface) {
                 $properties[] = $property;
             }
         }

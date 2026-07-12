@@ -33,14 +33,14 @@ final class FetcherRegistryTest extends TestCase
     public function testGetWithMultipleFetchers(): void
     {
         $fetcherA = new class () implements DataFetcherInterface {
-            public function fetch(array $identifiers): array
+            public function fetch(iterable $identifiers): array
             {
                 return [];
             }
         };
 
         $fetcherB = new class () implements DataFetcherInterface {
-            public function fetch(array $identifiers): array
+            public function fetch(iterable $identifiers): array
             {
                 return [];
             }

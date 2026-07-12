@@ -13,5 +13,5 @@ interface DataFetcherInterface
      *
      * @return array<string, object|list<object>> map identifier => single object or list of objects
      */
-    public function fetch(array $identifiers): array;
+    public function fetch(iterable $identifiers): array;
 }

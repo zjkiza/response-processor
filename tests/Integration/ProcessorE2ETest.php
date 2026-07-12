@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZJKiza\ResponseProcessor\Tests\Integration;
 
 use Symfony\Component\HttpFoundation\Request;
+use ZJKiza\ResponseProcessor\Listener\ProcessorListener;
 use ZJKiza\ResponseProcessor\Tests\Resources\Controller\TestController;
 use ZJKiza\ResponseProcessor\Tests\Resources\KernelTestCase;
 
@@ -53,7 +54,7 @@ final class ProcessorE2ETest extends KernelTestCase
 
         $container = self::getContainer();
 
-        $this->assertTrue($container->has(\ZJKiza\ResponseProcessor\Listener\ProcessorListener::class));
+        $this->assertTrue($container->has(ProcessorListener::class));
         $this->assertTrue($container->has('test.tag_handler'));
         $this->assertTrue($container->has('test.presenter_handler'));
         $this->assertTrue($container->has('test.json_response_listener'));

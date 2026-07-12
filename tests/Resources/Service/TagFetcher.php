@@ -16,7 +16,7 @@ final class TagFetcher implements DataFetcherInterface
         'c' => ['id' => 'tag_c', 'name' => 'Tag for C'],
     ];
 
-    public function fetch(array $identifiers): array
+    public function fetch(iterable $identifiers): array
     {
         $result = [];
         foreach ($identifiers as $id) {

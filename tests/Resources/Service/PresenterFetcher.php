@@ -26,7 +26,7 @@ final class PresenterFetcher implements DataFetcherInterface
         ],
     ];
 
-    public function fetch(array $identifiers): array
+    public function fetch(iterable $identifiers): array
     {
         $result = [];
         foreach ($identifiers as $id) {
