@@ -2,10 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.6.2]
+## [0.7.0]
 
 ### Changed
-- Changed the registration method of services that implement "DataFetcherInterface::class".
+- The registration method of services that implement "DataFetcherInterface::class".
+- The signature of the DataFetcherInterface::fetch method. From `fetch(array $identifiers): array` to `fetch(iterable $identifiers): array` 
+- Simplified creation of custom attributes. Extend `InjectDataAbstract` for a minimal custom attribute:
+
+```php
+use ZJKiza\ResponseProcessor\Attribute\InjectDataAbstract;
+
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class InjectPresenter extends InjectDataAbstract {}
+```
+
+The `$fetcher` property and `ProcessorAttributeInterface` implementation are inherited — you only need to add the `#[\Attribute]` declaration and extend the abstract class.
+
 
 ## [0.6.1]
 

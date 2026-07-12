@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace ZJKiza\ResponseProcessor\Tests\Resources\Attribute;
 
-use ZJKiza\ResponseProcessor\Contract\ProcessorAttributeInterface;
+use ZJKiza\ResponseProcessor\Attribute\InjectDataAbstract;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-class InjectPresenter implements ProcessorAttributeInterface
+final class InjectPresenter extends InjectDataAbstract
 {
-    public function __construct(
-        public string $fetcher,
-    ) {
-    }
 }

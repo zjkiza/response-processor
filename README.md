@@ -97,7 +97,7 @@ use ZJKiza\ResponseProcessor\Contract\DataFetcherInterface;
 class TagFetcher implements DataFetcherInterface
 {
     /** @param string[] $identifiers */
-    public function fetch(array $identifiers): array
+    public function fetch(iterable $identifiers): array
     {
         // return ['id1' => TagDto(...), 'id2' => TagDto(...)]
     }
@@ -146,19 +146,16 @@ public function testAction(): array { ... }
 
 ## Custom attributes
 
-Create your own property attribute and implement `ProcessorAttributeInterface`:
+Extend `InjectDataAbstract` for a minimal custom attribute:
 
 ```php
-use ZJKiza\ResponseProcessor\Contract\ProcessorAttributeInterface;
+use ZJKiza\ResponseProcessor\Attribute\InjectDataAbstract;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-class InjectPresenter implements ProcessorAttributeInterface
-{
-    public function __construct(
-        public string $fetcher,  // DataFetcherInterface class name
-    ) {}
-}
+class InjectPresenter extends InjectDataAbstract {}
 ```
+
+The `$fetcher` property and `ProcessorAttributeInterface` implementation are inherited — you only need to add the `#[\Attribute]` declaration and extend the abstract class.
 
 Register it with `AttributeHandler`:
 
