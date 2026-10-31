@@ -17,7 +17,10 @@ docker_compose_files_list: list[str] = [
 
 commands: dict[str, str] = {
     'composer install': 'composer install',
+    'composer validate': 'composer validate',
+    'composer composer-unused': 'composer composer-unused',
     'composer run phpunit': 'composer run phpunit',
     'composer run phpstan': 'composer run phpstan',
     'composer run psalm': 'composer run psalm',
+    'composer run php-cs-fixer': 'composer run php-cs-fixer',
 }

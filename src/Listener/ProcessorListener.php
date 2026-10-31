@@ -63,7 +63,7 @@ final class ProcessorListener
                 return null;
             }
 
-            $class = \is_object($object) ? $object::class : (\is_string($object) ? $object : null);
+            $class = $this->resolveClass($object);
 
             if (null === $class) {
                 return null;
@@ -109,5 +109,18 @@ final class ProcessorListener
         $this->controllerCache[$key] = $handlerClasses;
 
         return $handlerClasses;
+    }
+
+    private function resolveClass(mixed $object): ?string
+    {
+        if (\is_object($object)) {
+            return $object::class;
+        }
+
+        if (\is_string($object)) {
+            return $object;
+        }
+
+        return null;
     }
 }
