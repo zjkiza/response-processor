@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace ZJKiza\ResponseProcessor;
 
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use ZJKiza\ResponseProcessor\DependencyInjection\ZJKizaResponseProcessorExtension;
 
-final class ZJKizaResponseProcessorBundle extends AbstractBundle
+final class ZJKizaResponseProcessorBundle extends Bundle
 {
     public function getContainerExtension(): ExtensionInterface
     {

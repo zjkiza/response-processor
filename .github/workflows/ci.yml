@@ -1,0 +1,127 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+env:
+    # Analysis tools (psalm, phpstan, ...) pull in symfony/console ^6|^7|^8, which makes the
+    # Symfony 5.4 cells unresolvable. The test matrix removes them, the "static-analysis" job keeps them.
+    ANALYSIS_TOOLS: >-
+        vimeo/psalm psalm/plugin-phpunit psalm/plugin-symfony
+        phpstan/phpstan phpstan/phpstan-phpunit phpstan/phpstan-symfony
+        rector/rector friendsofphp/php-cs-fixer icanhazstring/composer-unused
+
+jobs:
+    tests:
+        name: PHP ${{ matrix.php }} / Symfony ${{ matrix.symfony }}${{ matrix.deps == 'lowest' && ' (lowest)' || '' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ['8.2', '8.3', '8.4', '8.5']
+                symfony: ['5.4', '6.4', '7.4', '8.1']
+                deps: [highest]
+                exclude:
+                    # Symfony 8.x requires PHP >= 8.4
+                    - { php: '8.2', symfony: '8.1' }
+                    - { php: '8.3', symfony: '8.1' }
+                include:
+                    - { php: '8.2', symfony: '5.4', deps: lowest }
+                    - { php: '8.2', symfony: '6.4', deps: lowest }
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: intl, mbstring
+                  coverage: none
+                  tools: composer:v2, flex
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+            - name: Cache Composer packages
+              uses: actions/cache@v6
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: composer-${{ runner.os }}-php${{ matrix.php }}-sf${{ matrix.symfony }}-${{ matrix.deps }}-${{ hashFiles('composer.json') }}
+                  restore-keys: |
+                      composer-${{ runner.os }}-php${{ matrix.php }}-sf${{ matrix.symfony }}-${{ matrix.deps }}-
+
+            - name: Remove analysis tools
+              run: |
+                  # shellcheck disable=SC2086
+                  composer remove --dev --no-update --no-interaction $ANALYSIS_TOOLS
+
+            - name: Install dependencies
+              env:
+                  SYMFONY_REQUIRE: ${{ matrix.symfony }}.*
+              run: >-
+                  composer update --prefer-dist --no-progress --no-interaction
+                  ${{ matrix.deps == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
+
+            - name: Run PHPUnit
+              run: vendor/bin/phpunit
+
+    static-analysis:
+        name: Static analysis & code style
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: intl, mbstring
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+            - name: Cache Composer packages
+              uses: actions/cache@v6
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: composer-${{ runner.os }}-analysis-${{ hashFiles('composer.json') }}
+                  restore-keys: |
+                      composer-${{ runner.os }}-analysis-
+
+            - name: Validate composer.json
+              run: composer validate --strict
+
+            - name: Install dependencies
+              run: composer update --prefer-dist --no-progress --no-interaction
+
+            - name: Unused dependencies
+              run: composer run composer-unused
+
+            - name: PHPStan
+              run: composer run phpstan
+
+            - name: Psalm
+              run: composer run psalm
+
+            # "composer run php-cs-fixer" rewrites files; CI only checks.
+            - name: PHP-CS-Fixer
+              run: vendor/bin/php-cs-fixer fix --dry-run --diff --allow-risky=yes

@@ -1,5 +1,7 @@
 # ResponseProcessor Bundle
 
+[![CI](https://github.com/zjkiza/response-processor/actions/workflows/ci.yml/badge.svg)](https://github.com/zjkiza/response-processor/actions/workflows/ci.yml)
+
 A Symfony bundle that fetches and injects related data into DTOs after a controller returns, using PHP 8 attributes.
 
 ## How it works
@@ -41,7 +43,16 @@ Some DTO fields are costly to load (e.g. full-text search data, analytics). Inst
 - **Clean controllers** — controllers only assemble and return DTOs. They know nothing about fetching or injection.
 - **Predictable performance** — `O(1)` batch calls per `DataFetcher` class, property resolution cached per call sequence.
 - **Extensible** — create a custom `#[Attribute]`, implement `ProcessorAttributeInterface`, register an `AttributeHandler` with your key, and it works.
-- **Battle-tested** — 96.97% code coverage, 37 tests, 0 PHPStan errors at level max.
+- **Battle-tested** — 39 tests, 0 PHPStan errors at level max, continuously tested on every supported PHP/Symfony combination.
+
+## Requirements
+
+| | Supported versions |
+|---|---|
+| PHP | 8.2, 8.3, 8.4, 8.5 |
+| Symfony | 5.4, 6.4, 7.4, 8.1 (Symfony 8 requires PHP 8.4+) |
+
+Every push to `main` and every pull request runs the test suite (PHPUnit) on all valid PHP × Symfony combinations, plus a `--prefer-lowest` run, and a quality job (`composer validate`, composer-unused, PHPStan level max, Psalm, PHP-CS-Fixer). See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Installation
 

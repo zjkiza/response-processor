@@ -10,7 +10,7 @@ parameters:
         - src
         - tests
     excludePaths:
-        - tests/Resources/var
+        - tests/Resources/var (?)
     tmpDir: var/phpstan
 
     symfony:

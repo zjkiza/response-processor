@@ -77,6 +77,10 @@ RUN chmod +x /usr/local/bin/cmd.sh
 RUN groupadd -g ${GID} app \
  && useradd -u ${UID} -g app -m app
 
+# COMPOSER_HOME points to /composer, which must be writable by the unprivileged user (cache, global packages).
+RUN mkdir -p /composer \
+ && chown -R app:app /composer
+
 USER app
 
 WORKDIR /www
